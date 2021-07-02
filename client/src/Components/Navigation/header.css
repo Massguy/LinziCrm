@@ -1,0 +1,47 @@
+header {
+  width: 100%;
+
+  border-bottom: 1px solid white;
+}
+
+header .logo {
+  font-family: "Monoton", cursive;
+  color: #ffffff;
+  font-size: 25px;
+  padding: 11px 0px;
+}
+
+header a,
+header span {
+  cursor: pointer;
+  margin-left: 15%;
+}
+
+header .container {
+  display: flex;
+}
+
+header .container .left {
+  width: 250px;
+}
+
+header .container .right {
+  flex-grow: 1;
+  border-left: 1px solid #eeeeee;
+  border-right: 1px solid #eeeeee;
+}
+header .container .right .top,
+header .container .right .bottom {
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: right;
+  color: #ffffff;
+  font-size: 15px;
+  padding: 10px 20px;
+}
+
+header .log_out_link {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 20px;
+}
