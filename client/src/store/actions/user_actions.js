@@ -1,7 +1,9 @@
 import * as actions from './index';
 import axios from "axios"
-import { getAuthHeader, removeTokenCookie, getTokenCookie } from '../../utils/tools';
+import { getAuthHeader, removeTokenCookie, getTokenCookie} from '../../utils/tools';
+
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 
 export const userRegister = (values) => {
     return async(dispatch)=>{
@@ -26,6 +28,7 @@ export const userSignIn = (values) => {
                 email:values.email, 
                 password:values.password
             });
+            console.log(user.data.user);
             dispatch(actions.userAuthenticate({data: user.data.user,auth: true}))
             dispatch(actions.successGlobal('Welcome.'))
         } catch(error){
@@ -44,7 +47,7 @@ export const userIsAuth = () => {
 
             const user = await axios.get(`/api/auth/isauth`, getAuthHeader());
 
-            console.log(user)
+           
 
             dispatch(actions.userAuthenticate({data: user.data,auth: true}))
         } catch(error){
@@ -96,3 +99,5 @@ export const userChangeEmail = (data) => {
         }
     }
 }  
+
+
