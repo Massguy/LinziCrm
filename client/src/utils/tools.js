@@ -64,7 +64,7 @@ const auth_id = 'f6500cfe-5991-422f-aa8d-fd18a814e47b'
 const auth_key = 'VlVnsmU3Lq2yDcnSMGAtn6bhrJ4sowsG9BOn5yIFo5R0Lsy7jmGLw5YKcuTvWGwrFtHIBdHCUoc1ClWGsQ=='
 
 export const getAuthHeader2 = () => {
-    const hmacSignature = Base64.stringify(hmacSHA256("pageSize=15", auth_key))
+    const hmacSignature = Base64.stringify(hmacSHA256("pageSize=15&&customer=", auth_key))
     return { headers: { 
         //'Authorization':`Bearer ${getTokenCookie()}`, 
         "content-Type": 'application/json',

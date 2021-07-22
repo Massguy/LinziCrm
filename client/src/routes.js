@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { userIsAuth,userSignOut } from './store/actions/user_actions';
 import Customers from './Components/customers';
 import UserInfo from './Components/dashboard/user/info';
+import CustomerById from './Components/customers/CustomerByID';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -43,12 +44,14 @@ function App() {
             signOutUser={signOutUser}/>
         <MainLayout>
         <Switch>
-        <Route path="/dashboard/user/user_info" component={authGuard(UserInfo)} />
-        <Route path="/dashboard/admin/customers" component={authGuard(
+        <Route exact path="/dashboard/user/user_info" component={authGuard(UserInfo)} />
+        <Route exact path="/dashboard/admin/customers" component={authGuard(
             Customers)}/>
-        <Route path="/dashboard" component={authGuard(Dashboard)}/>
+        <Route exact path="/dashboard/admin/customers/:id" component={authGuard(CustomerById)}/>
         
-          <Route path="/" component={RegisterLogin}/>
+        <Route exact path="/dashboard" component={authGuard(Dashboard)}/>
+        
+          <Route exact path="/" component={RegisterLogin}/>
           
 
         </Switch>

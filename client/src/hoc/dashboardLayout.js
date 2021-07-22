@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 export const links = [
     {
-        name:'My account',
+        name:'Products',
         linkTo:'/dashboard'
     },
     {
