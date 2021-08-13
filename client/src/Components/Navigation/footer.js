@@ -12,7 +12,7 @@ const Footer = () => {
 
     return(
         <footer className="bck_b_dark">
-            <div className="container">
+            <div className="footerContainer">
                 <div className="logo">
                     The LJ Group
                 </div>
@@ -51,14 +51,7 @@ const Footer = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="left">
-                        <h2>Be the first to know</h2>
-                        <div>
-                            <div>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </footer>

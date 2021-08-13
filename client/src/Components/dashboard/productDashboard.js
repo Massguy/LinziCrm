@@ -8,6 +8,7 @@ const ProductDashboard = ({
 }) => {
   return (
     <>
+    <div className="productDashboard">
       <Table striped bordered hover>
         <tbody>
           <tr>
@@ -18,6 +19,7 @@ const ProductDashboard = ({
           </tr>
         </tbody>
       </Table>
+      </div>
     </>
   );
 };

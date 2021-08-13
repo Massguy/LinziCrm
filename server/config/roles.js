@@ -1,23 +1,25 @@
-const AccessControl = require('accesscontrol');
+const AccessControl = require("accesscontrol");
 
 const allRights = {
-    'create:any':['*'],
-    'read:any':['*'],
-    'update:any':['*'],
-    'delete:any':['*'],
-}
+  "create:any": ["*"],
+  "read:any": ["*"],
+  "update:any": ["*"],
+  "delete:any": ["*"],
+};
 let grantsObject = {
-    admin:{
-        profile:allRights
+  admin: {
+    profile: allRights,
+    pipeline: allRights,
+    note: allRights
+  },
+  user: {
+    profile: {
+      "read:own": ["*", "!password", "!_id"],
+      "update:own": ["*"],
     },
-    user:{
-        profile:{
-            'read:own':['*','!password','!_id'],
-            'update:own':['*'],
-        }
-    }
-}
+  },
+};
 
-const roles = new AccessControl(grantsObject)
+const roles = new AccessControl(grantsObject);
 
-module.exports = { roles }
+module.exports = { roles };

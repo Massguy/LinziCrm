@@ -5,50 +5,132 @@ import axios from "axios";
 
 import hmacSHA256 from "crypto-js/hmac-sha256";
 import Base64 from "crypto-js/enc-base64";
+
 const CustomerById = (props) => {
-  console.log(props);
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState([]);
+  const [notes, setNotes] = useState([]);
+  // const [title, setTitle] = useState("");
+  // const [content, setContent] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    noteId: "",
+  });
+  const [editNote, setEditNote] = useState(false);
 
   const auth_id = "f6500cfe-5991-422f-aa8d-fd18a814e47b";
   const auth_key =
     "VlVnsmU3Lq2yDcnSMGAtn6bhrJ4sowsG9BOn5yIFo5R0Lsy7jmGLw5YKcuTvWGwrFtHIBdHCUoc1ClWGsQ==";
-  console.log("here");
 
   // const { id } = useParams()
   const id = props.match.params.id;
-  console.log(id, "<====id");
 
-  useEffect(() => {
-    const getAuthHeader2 = () => {
-      const hmacSignature = Base64.stringify(hmacSHA256(``, auth_key));
-      return {
-        headers: {
-          //'Authorization':`Bearer ${getTokenCookie()}`,
-          "content-Type": "application/json",
-          Accept: "application/json",
-          "api-auth-id": auth_id,
-          "api-auth-signature": hmacSignature,
-          "client-type": "linzi",
-        },
-      };
+  const getAuthHeader2 = () => {
+    const hmacSignature = Base64.stringify(hmacSHA256(``, auth_key));
+    return {
+      headers: {
+        //'Authorization':`Bearer ${getTokenCookie()}`,
+        "content-Type": "application/json",
+        Accept: "application/json",
+        "api-auth-id": auth_id,
+        "api-auth-signature": hmacSignature,
+        "client-type": "linzi",
+      },
     };
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  useEffect(() => {
     const fetchCustomer = async () => {
       const result = await axios.get(
         `https://api.unleashedsoftware.com/Customers/${id}`,
         getAuthHeader2()
       );
       setCustomers(result.data);
+
       setLoading(false);
     };
     fetchCustomer();
   }, [id]);
-  console.log(customers);
+
+  useEffect(() => {
+    const fetchCustomerNotes = async () => {
+      const result = await axios.get(`http://localhost:3002/api/notes/${id}`);
+      setNotes(result.data);
+    };
+    fetchCustomerNotes();
+  }, [id]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { title, content, noteId } = formData;
+    try {
+      if (!editNote) {
+        const note = await axios.post(
+          "http://localhost:3002/api/notes",
+          {
+            title,
+            content,
+            customerId: id,
+          },
+          getAuthHeader2()
+        );
+        setNotes([note.data, ...notes]);
+        setFormData({ ...formData, title, content });
+      } else {
+        
+
+        const note = await axios.patch(
+          `http://localhost:3002/api/notes/${noteId}`,
+          {
+            title,
+            content,
+          },
+          getAuthHeader2()
+        );
+
+        if (note) {
+          const { title, content, _id } = note.data;
+          const updatedRes = {
+            title,
+            content,
+          };
+
+         
+          // setNotes([note.data, ...notes]);
+          const updated = notes.map((i) => (i._id === _id ? updatedRes : i));
+          setNotes(updated);
+          setFormData({ ...formData, title: "", content: "" });
+        }
+      }
+    } catch (err) {
+      console.log("an error occurred==>>", err);
+    }
+  };
+
+  const handleEdit = ({ title, content, _id }) => {
+  
+    // setNoteId(_id)
+    setEditNote(true);
+    // setTitle(title);
+    // setContent(content);
+
+    setFormData({
+      title,
+      content,
+      noteId: _id,
+    });
+  };
 
   return (
     <>
       <DashboardLayout>
-        <h1>{customers.CustomerName}</h1>
+        <div >
+        <div>
+        <h3>{customers.CustomerName}</h3>
         <p>Code : {customers.CustomerCode}</p>
         <p>
           Contact Name:{" "}
@@ -61,31 +143,51 @@ const CustomerById = (props) => {
         </p>
         <p>Email: {customers.Email}</p>
         <p>Website: {customers.Website}</p>
+        </div>
         <div>
           {loading ? (
             <p>Loading...</p>
           ) : (
             <div>
               <div>
-                {customers.Addresses.map((data, i) => {
-                  return (
-                    <div key={i}>
-                      <h3> Address Type: {data.AddressType} </h3>
-                      <p> Address Name: {data.AddressName} </p>
-                      <p> StreetAddress: {data.StreetAddress} </p>
-                      <p> StreetAddress2: {data.StreetAddress2} </p>
-                      <p> City: {data.City} </p>
-                      <p> Country: {data.Country} </p>
-                      <p> PostalCode: {data.PostalCode} </p>
-                    </div>
-                  );
-                })}
-                <h5>Customer Notes: </h5>
-                <textarea rows="60" cols="0" />
+                <h3>{customers.Addresses[0].AddressType} Address</h3>
+                <p> {customers.Addresses[0].AddressName}</p>
+                <p> {customers.Addresses[0].StreetAddress}</p>
+                <p> {customers.Addresses[0].StreetAddress2}</p>
+                <p> {customers.Addresses[0].City}</p>
+                <p> {customers.Addresses[0].Country}</p>
+                <p> {customers.Addresses[0].PostalCode}</p>
               </div>
             </div>
           )}
         </div>
+        </div>
+
+        {notes.map((note, i) => (
+          <div key={i}>
+            <div className="notesContainer">
+              <h3>{note.title}</h3>
+              <p>{note.content}</p>
+              <p>Last Edited on {note.updatedAt.slice(0,10)}</p>
+          
+            <button onClick={() => handleEdit(note)}>Edit</button>
+            </div>
+          </div>
+        ))}
+
+        <form onSubmit={(e) => handleSubmit(e)} className="customerNotesForm">
+          Title:{" "}
+          <input value={formData.title} onChange={handleChange} name="title" />{" "}
+          <br />
+          Content:{" "}
+          <textarea
+            value={formData.content}
+            onChange={handleChange}
+            name="content"
+            style={{ height: "500px" }}
+          />
+          {editNote ? <button>Edit Note</button> : <button>Add Note</button>}
+        </form>
       </DashboardLayout>
     </>
   );

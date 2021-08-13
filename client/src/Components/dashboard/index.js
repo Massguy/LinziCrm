@@ -24,7 +24,9 @@ const Dashboard = () => {
   };
   useEffect(() => {
     const getAuthHeader2 = () => {
-      const hmacSignature = Base64.stringify(hmacSHA256(``, auth_key));
+      const hmacSignature = Base64.stringify(
+        hmacSHA256(`orderBy=availableQty`, auth_key)
+      );
       return {
         headers: {
           //'Authorization':`Bearer ${getTokenCookie()}`,
@@ -38,7 +40,7 @@ const Dashboard = () => {
     };
     const fetchList = async () => {
       const result = await axios.get(
-        `https://api.unleashedsoftware.com/StockOnHand/${currentPage}`,
+        `https://api.unleashedsoftware.com/StockOnHand/${currentPage}?orderBy=availableQty`,
         getAuthHeader2()
       );
 
@@ -51,15 +53,17 @@ const Dashboard = () => {
   return (
     <>
       <DashboardLayout title="Overview">
+        <div className="productSearch">
         <SearchBox
-          placeholder="search Product by code or description"
+          placeholder="search Product by code"
           handleChange={(e) => setSearchField(e.target.value)}
         />
+        </div>
         <div>
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <div>
+            <div className="productTable">
               <div>
                 <Table striped bordered hover variant="dark">
                   <thead>
@@ -83,17 +87,19 @@ const Dashboard = () => {
                     </div>
                   );
                 })}
-                <ReactPaginate
-                  previousLabel={"Prev"}
-                  onPageChange={handlePageClick}
-                  pageCount={products.Pagination.NumberOfPages}
-                  nextLabel={"Next"}
-                  containerClassName={"paginationBttns"}
-                  previousLinkClassName={"previousBttns"}
-                  nextLinkClassName={"nextBttn"}
-                  disabledClassName={"paginationDisabled"}
-                  activeClassName={"paginationActive"}
-                />
+                <div className="paginationContainer">
+                  <ReactPaginate
+                    previousLabel={"Prev"}
+                    onPageChange={handlePageClick}
+                    pageCount={products.Pagination.NumberOfPages}
+                    nextLabel={"Next"}
+                    containerClassName={"paginationBttns"}
+                    previousLinkClassName={"previousBttns"}
+                    nextLinkClassName={"nextBttn"}
+                    disabledClassName={"paginationDisabled"}
+                    activeClassName={"paginationActive"}
+                  />
+                </div>
               </div>
             </div>
           )}
