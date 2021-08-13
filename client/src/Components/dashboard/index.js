@@ -76,7 +76,7 @@ const Dashboard = () => {
                   </thead>
                 </Table>
 
-                {products.Items.map((data, i) => {
+                {products.Items.filter((e) => e.AvailableQty >= 0).sort((a, b) => b.AvailableQty - a.AvailableQty).map((data, i) => {
                   return (
                     <div key={i}>
                       <ProductDashboard
