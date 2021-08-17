@@ -5,7 +5,6 @@ import axios from "axios";
 import ReactPaginate from "react-paginate";
 import Table from "react-bootstrap/Table";
 
-import SearchBox from "../customers/searchbox";
 import hmacSHA256 from "crypto-js/hmac-sha256";
 import Base64 from "crypto-js/enc-base64";
 import ProductDashboard from "./productDashboard";
@@ -25,7 +24,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getAuthHeader2 = () => {
       const hmacSignature = Base64.stringify(
-        hmacSHA256(`orderBy=availableQty`, auth_key)
+        hmacSHA256(`pageSize=500`, auth_key)
       );
       return {
         headers: {
@@ -40,12 +39,12 @@ const Dashboard = () => {
     };
     const fetchList = async () => {
       const result = await axios.get(
-        `https://api.unleashedsoftware.com/StockOnHand/${currentPage}?orderBy=availableQty`,
+        `https://api.unleashedsoftware.com/StockOnHand/${currentPage}?pageSize=500`,
         getAuthHeader2()
       );
 
       setProducts(result.data);
-      console.log(result.data);
+ 
       setLoading(false);
     };
     fetchList();
@@ -53,12 +52,7 @@ const Dashboard = () => {
   return (
     <>
       <DashboardLayout title="Overview">
-        <div className="productSearch">
-        <SearchBox
-          placeholder="search Product by code"
-          handleChange={(e) => setSearchField(e.target.value)}
-        />
-        </div>
+      
         <div>
           {loading ? (
             <p>Loading...</p>
@@ -76,7 +70,7 @@ const Dashboard = () => {
                   </thead>
                 </Table>
 
-                {products.Items.filter((e) => e.AvailableQty >= 0).sort((a, b) => b.AvailableQty - a.AvailableQty).map((data, i) => {
+                {products.Items.filter((e) => e.AvailableQty >= 1).sort((a, b) => b.AvailableQty - a.AvailableQty).map((data, i) => {
                   return (
                     <div key={i}>
                       <ProductDashboard
