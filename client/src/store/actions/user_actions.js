@@ -8,7 +8,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 export const userRegister = (values) => {
     return async(dispatch)=>{
         try{
-            const user = await axios.post(`https://www.ljbridal.co.uk/api/auth/register`,{
+            const user = await axios.post(`http://77.68.32.110//apiapi/auth/register`,{
                 email:values.email, 
                 password:values.password
             });
@@ -24,7 +24,7 @@ export const userRegister = (values) => {
 export const userSignIn = (values) => {
     return async(dispatch)=>{
         try{
-            const user = await axios.post(`http://www.ljbridal.co.uk/api/auth/signin`,{
+            const user = await axios.post(`http://77.68.32.110/apiapi/auth/signin`,{
                 email:values.email, 
                 password:values.password
             });
@@ -45,7 +45,7 @@ export const userIsAuth = () => {
                 throw new Error();
             }
 
-            const user = await axios.get(`https://www.ljbridal.co.uk/api/auth/isauth`, getAuthHeader());
+            const user = await axios.get(`http://77.68.32.110/apiapi/auth/isauth`, getAuthHeader());
 
            
 
@@ -67,7 +67,7 @@ export const userSignOut = () => {
 export const userUpdateProfile = (data) => {
     return async(dispatch, getState )=>{
         try{
-            const profile =await axios.patch(`https://www.ljbridal.co.uk/api/users/profile`,{
+            const profile =await axios.patch(`http://77.68.32.110/apiapi/users/profile`,{
                 data:data
             }, getAuthHeader());
 
@@ -87,7 +87,7 @@ export const userUpdateProfile = (data) => {
 export const userChangeEmail = (data) => {
     return async(dispatch )=>{
         try{
-            await axios.patch(`https://www.ljbridal.co.uk/api/users/email`,{
+            await axios.patch(`http://77.68.32.110/apiapi/users/email`,{
                 email: data.email,
                 newemail: data.newemail
             }, getAuthHeader());

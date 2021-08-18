@@ -58,7 +58,7 @@ const CustomerById = (props) => {
 
   useEffect(() => {
     const fetchCustomerNotes = async () => {
-      const result = await axios.get(`http://localhost:3002/api/notes/${id}`);
+      const result = await axios.get(`http://77.68.32.110/apiapi/notes/${id}`);
       setNotes(result.data);
     };
     fetchCustomerNotes();
@@ -70,7 +70,7 @@ const CustomerById = (props) => {
     try {
       if (!editNote) {
         const note = await axios.post(
-          "http://localhost:3002/api/notes",
+          "http://77.68.32.110/apiapi/notes",
           {
             title,
             content,
@@ -81,10 +81,8 @@ const CustomerById = (props) => {
         setNotes([note.data, ...notes]);
         setFormData({ ...formData, title, content });
       } else {
-        
-
         const note = await axios.patch(
-          `http://localhost:3002/api/notes/${noteId}`,
+          `http://77.68.32.110/apiapi/notes/${noteId}`,
           {
             title,
             content,
@@ -99,7 +97,6 @@ const CustomerById = (props) => {
             content,
           };
 
-         
           // setNotes([note.data, ...notes]);
           const updated = notes.map((i) => (i._id === _id ? updatedRes : i));
           setNotes(updated);
@@ -112,7 +109,6 @@ const CustomerById = (props) => {
   };
 
   const handleEdit = ({ title, content, _id }) => {
-  
     // setNoteId(_id)
     setEditNote(true);
     // setTitle(title);
@@ -128,39 +124,39 @@ const CustomerById = (props) => {
   return (
     <>
       <DashboardLayout>
-        <div >
         <div>
-        <h3>{customers.CustomerName}</h3>
-        <p>Code : {customers.CustomerCode}</p>
-        <p>
-          Contact Name:{" "}
-          {customers.ContactFirstName + " " + customers.ContactLastName}
-        </p>
-        <p>OfficePhone: {customers.PhoneNumber}</p>
-        <p>
-          Mobile:{" "}
-          {customers.MobileNumber === null ? "nil" : customers.MobileNumber}
-        </p>
-        <p>Email: {customers.Email}</p>
-        <p>Website: {customers.Website}</p>
-        </div>
-        <div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <div>
+          <div>
+            <h3>{customers.CustomerName}</h3>
+            <p>Code : {customers.CustomerCode}</p>
+            <p>
+              Contact Name:{" "}
+              {customers.ContactFirstName + " " + customers.ContactLastName}
+            </p>
+            <p>OfficePhone: {customers.PhoneNumber}</p>
+            <p>
+              Mobile:{" "}
+              {customers.MobileNumber === null ? "nil" : customers.MobileNumber}
+            </p>
+            <p>Email: {customers.Email}</p>
+            <p>Website: {customers.Website}</p>
+          </div>
+          <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
               <div>
-                <h3>{customers.Addresses[0].AddressType} Address</h3>
-                <p> {customers.Addresses[0].AddressName}</p>
-                <p> {customers.Addresses[0].StreetAddress}</p>
-                <p> {customers.Addresses[0].StreetAddress2}</p>
-                <p> {customers.Addresses[0].City}</p>
-                <p> {customers.Addresses[0].Country}</p>
-                <p> {customers.Addresses[0].PostalCode}</p>
+                <div>
+                  <h3>{customers.Addresses[0].AddressType} Address</h3>
+                  <p> {customers.Addresses[0].AddressName}</p>
+                  <p> {customers.Addresses[0].StreetAddress}</p>
+                  <p> {customers.Addresses[0].StreetAddress2}</p>
+                  <p> {customers.Addresses[0].City}</p>
+                  <p> {customers.Addresses[0].Country}</p>
+                  <p> {customers.Addresses[0].PostalCode}</p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         </div>
 
         {notes.map((note, i) => (
@@ -168,9 +164,9 @@ const CustomerById = (props) => {
             <div className="notesContainer">
               <h3>{note.title}</h3>
               <p>{note.content}</p>
-              <p>Last Edited on {note.updatedAt.slice(0,10)}</p>
-          
-            <button onClick={() => handleEdit(note)}>Edit</button>
+              <p>Last Edited on </p>
+
+              <button onClick={() => handleEdit(note)}>Edit</button>
             </div>
           </div>
         ))}
