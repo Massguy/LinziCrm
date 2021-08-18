@@ -8,6 +8,7 @@ const routes = require("./routes");
 const passport = require("passport");
 const cors = require("cors");
 const { jwtStrategy } = require("./middleware/passport");
+const morgan = require("morgan");
 const { handleError, convertToApiError } = require("./middleware/apiError");
 
 const mongoUri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}?retryWrites=true&w=majority`;
@@ -17,6 +18,8 @@ mongoose.connect(mongoUri, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(morgan("combined"));
 //body parser
 app.use(cors());
 app.use(express.json());

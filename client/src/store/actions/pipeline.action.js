@@ -9,7 +9,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 export const pipelineByPaginate = (args) => {
   return async (dispatch) => {
     try {
-      const pipeline = await axios.post(`/api/pipeline/paginate/all`, args);
+      const pipeline = await axios.post(`https://www.ljbridal.co.uk/api/pipeline/paginate/all`, args);
       dispatch(actions.pipelineByPaginate(pipeline.data));
     } catch (error) {
       dispatch(actions.errorGlobal(error.response.data.message));
@@ -20,7 +20,7 @@ export const pipelineByPaginate = (args) => {
 export const productRemove = (id) => {
   return async (dispatch) => {
     try {
-      await axios.delete(`/api/pipeline/pipelines/${id}`, getAuthHeader());
+      await axios.delete(`https://www.ljbridal.co.uk/api/pipeline/pipelines/${id}`, getAuthHeader());
       dispatch(actions.productRemove());
       dispatch(actions.successGlobal());
     } catch (error) {
@@ -33,7 +33,7 @@ export const pipelineAdd = (data) => {
   return async (dispatch) => {
     try {
       const pipeline = await axios.post(
-        `/api/pipeline/`,
+        `https://www.ljbridal.co.uk/api/pipeline/`,
         data,
         getAuthHeader()
       );
@@ -48,7 +48,7 @@ export const pipelineAdd = (data) => {
 export const getPipelineById = (id) => {
   return async (dispatch) => {
     try {
-      const pipeline = await axios.get(`/api/pipeline/pipelines/${id}`);
+      const pipeline = await axios.get(`https://www.ljbridal.co.uk/api/pipeline/pipelines/${id}`);
       dispatch(actions.getPipelineByID(pipeline.data));
     } catch (error) {
       dispatch(actions.errorGlobal(error.response.data.message));
@@ -59,7 +59,7 @@ export const getPipelineById = (id) => {
 export const pipelineEdit = (values, id) => {
   return async(dispatch)=>{
       try{
-          await axios.patch(`/api/pipeline/pipelines/${id}`,values,getAuthHeader());
+          await axios.patch(`https://www.ljbridal.co.uk/api/pipeline/pipelines/${id}`,values,getAuthHeader());
           
           dispatch(actions.successGlobal('Update done !!'));
       } catch(error){
