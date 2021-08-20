@@ -58,7 +58,9 @@ const CustomerById = (props) => {
 
   useEffect(() => {
     const fetchCustomerNotes = async () => {
-      const result = await axios.get(`http://77.68.32.110/apiapi/notes/${id}`);
+      const result = await axios.get(
+        `https://ljbridal.co.uk/apiapi/notes/${id}`
+      );
       setNotes(result.data);
     };
     fetchCustomerNotes();
@@ -70,7 +72,7 @@ const CustomerById = (props) => {
     try {
       if (!editNote) {
         const note = await axios.post(
-          "http://77.68.32.110/apiapi/notes",
+          "https://ljbridal.co.uk/apiapi/notes",
           {
             title,
             content,
@@ -82,7 +84,7 @@ const CustomerById = (props) => {
         setFormData({ ...formData, title, content });
       } else {
         const note = await axios.patch(
-          `http://77.68.32.110/apiapi/notes/${noteId}`,
+          `https://ljbridal.co.uk/apiapi/notes/${noteId}`,
           {
             title,
             content,

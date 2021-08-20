@@ -1,103 +1,121 @@
-import * as actions from './index';
-import axios from "axios"
-import { getAuthHeader, removeTokenCookie, getTokenCookie} from '../../utils/tools';
+import * as actions from "./index";
+import axios from "axios";
+import {
+  getAuthHeader,
+  removeTokenCookie,
+  getTokenCookie,
+} from "../../utils/tools";
 
-axios.defaults.headers.post['Content-Type'] = 'application/json';
-
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const userRegister = (values) => {
-    return async(dispatch)=>{
-        try{
-            const user = await axios.post(`http://77.68.32.110//apiapi/auth/register`,{
-                email:values.email, 
-                password:values.password
-            });
-            dispatch(actions.userAuthenticate({data: user.data.user,auth: true}))
-            dispatch(actions.successGlobal('Welcome !! check you mail to verify account.'))
-        } catch(error){
-            dispatch(actions.errorGlobal(error.response.data.message))
-
+  return async (dispatch) => {
+    try {
+      const user = await axios.post(
+        `https://ljbridal.co.uk/apiapi/auth/register`,
+        {
+          email: values.email,
+          password: values.password,
         }
+      );
+      dispatch(actions.userAuthenticate({ data: user.data.user, auth: true }));
+      dispatch(
+        actions.successGlobal("Welcome !! check you mail to verify account.")
+      );
+    } catch (error) {
+      dispatch(actions.errorGlobal(error.response.data.message));
     }
-}
+  };
+};
 
 export const userSignIn = (values) => {
-    return async(dispatch)=>{
-        try{
-            const user = await axios.post(`http://77.68.32.110/apiapi/auth/signin`,{
-                email:values.email, 
-                password:values.password
-            });
-            console.log(user.data.user);
-            dispatch(actions.userAuthenticate({data: user.data.user,auth: true}))
-            dispatch(actions.successGlobal('Welcome.'))
-        } catch(error){
-            dispatch(actions.errorGlobal(error.response.data.message))
-
+  return async (dispatch) => {
+    try {
+      const user = await axios.post(
+        `https://ljbridal.co.uk/apiapi/auth/signin`,
+        {
+          email: values.email,
+          password: values.password,
         }
+      );
+      console.log(user.data.user);
+      dispatch(actions.userAuthenticate({ data: user.data.user, auth: true }));
+      dispatch(actions.successGlobal("Welcome."));
+    } catch (error) {
+      dispatch(actions.errorGlobal(error.response.data.message));
     }
-}
+  };
+};
 
 export const userIsAuth = () => {
-    return async(dispatch)=>{
-        try{
-            if(!getTokenCookie()){
-                throw new Error();
-            }
+  return async (dispatch) => {
+    try {
+      if (!getTokenCookie()) {
+        throw new Error();
+      }
 
-            const user = await axios.get(`http://77.68.32.110/apiapi/auth/isauth`, getAuthHeader());
+      const user = await axios.get(
+        `https://ljbridal.co.uk/apiapi/auth/isauth`,
+        getAuthHeader()
+      );
 
-           
-
-            dispatch(actions.userAuthenticate({data: user.data,auth: true}))
-        } catch(error){
-            dispatch(actions.userAuthenticate({data:{},auth:false}));
-        }
+      dispatch(actions.userAuthenticate({ data: user.data, auth: true }));
+    } catch (error) {
+      dispatch(actions.userAuthenticate({ data: {}, auth: false }));
     }
-}
+  };
+};
 
 export const userSignOut = () => {
-    return async(dispatch)=> {
-        removeTokenCookie();
-        dispatch(actions.userSignOut())
-        dispatch(actions.successGlobal('Good bye !!'))
-    }
-}
+  return async (dispatch) => {
+    removeTokenCookie();
+    dispatch(actions.userSignOut());
+    dispatch(actions.successGlobal("Good bye !!"));
+  };
+};
 
 export const userUpdateProfile = (data) => {
-    return async(dispatch, getState )=>{
-        try{
-            const profile =await axios.patch(`http://77.68.32.110/apiapi/users/profile`,{
-                data:data
-            }, getAuthHeader());
+  return async (dispatch, getState) => {
+    try {
+      const profile = await axios.patch(
+        `https://ljbridal.co.uk/apiapi/users/profile`,
+        {
+          data: data,
+        },
+        getAuthHeader()
+      );
 
-            const userData ={
-                ...getState().users.data,
-                firstName: profile.data.firstName,
-                lastName:  profile.data.lastName,
-            }
-            dispatch(actions.userUpdateProfile(userData))
-            dispatch(actions.successGlobal('Profile updated !!'))
-        }catch(error){
-            dispatch(actions.errorGlobal(error.response.data.message))
-        }
+      const userData = {
+        ...getState().users.data,
+        firstName: profile.data.firstName,
+        lastName: profile.data.lastName,
+      };
+      dispatch(actions.userUpdateProfile(userData));
+      dispatch(actions.successGlobal("Profile updated !!"));
+    } catch (error) {
+      dispatch(actions.errorGlobal(error.response.data.message));
     }
-} 
+  };
+};
 
 export const userChangeEmail = (data) => {
-    return async(dispatch )=>{
-        try{
-            await axios.patch(`http://77.68.32.110/apiapi/users/email`,{
-                email: data.email,
-                newemail: data.newemail
-            }, getAuthHeader());
+  return async (dispatch) => {
+    try {
+      await axios.patch(
+        `https://ljbridal.co.uk/apiapi/users/email`,
+        {
+          email: data.email,
+          newemail: data.newemail,
+        },
+        getAuthHeader()
+      );
 
-            dispatch(actions.userChangeEmail(data.newemail))
-            dispatch(actions.successGlobal('Good job, Remember to verify your account !!'))
-        } catch(error){
-            dispatch(actions.errorGlobal(error.response.data.message))
-        }
+      dispatch(actions.userChangeEmail(data.newemail));
+      dispatch(
+        actions.successGlobal("Good job, Remember to verify your account !!")
+      );
+    } catch (error) {
+      dispatch(actions.errorGlobal(error.response.data.message));
     }
-}  
-
-
+  };
+};
