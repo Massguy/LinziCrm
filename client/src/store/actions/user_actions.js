@@ -11,13 +11,10 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 export const userRegister = (values) => {
   return async (dispatch) => {
     try {
-      const user = await axios.post(
-        `https://ljbridal.co.uk/apiapi/auth/register`,
-        {
-          email: values.email,
-          password: values.password,
-        }
-      );
+      const user = await axios.post(`/apiapi/auth/register`, {
+        email: values.email,
+        password: values.password,
+      });
       dispatch(actions.userAuthenticate({ data: user.data.user, auth: true }));
       dispatch(
         actions.successGlobal("Welcome !! check you mail to verify account.")
@@ -31,13 +28,10 @@ export const userRegister = (values) => {
 export const userSignIn = (values) => {
   return async (dispatch) => {
     try {
-      const user = await axios.post(
-        `https://ljbridal.co.uk/apiapi/auth/signin`,
-        {
-          email: values.email,
-          password: values.password,
-        }
-      );
+      const user = await axios.post(`/apiapi/auth/signin`, {
+        email: values.email,
+        password: values.password,
+      });
       console.log(user.data.user);
       dispatch(actions.userAuthenticate({ data: user.data.user, auth: true }));
       dispatch(actions.successGlobal("Welcome."));
@@ -54,10 +48,7 @@ export const userIsAuth = () => {
         throw new Error();
       }
 
-      const user = await axios.get(
-        `https://ljbridal.co.uk/apiapi/auth/isauth`,
-        getAuthHeader()
-      );
+      const user = await axios.get(`/apiapi/auth/isauth`, getAuthHeader());
 
       dispatch(actions.userAuthenticate({ data: user.data, auth: true }));
     } catch (error) {
@@ -78,7 +69,7 @@ export const userUpdateProfile = (data) => {
   return async (dispatch, getState) => {
     try {
       const profile = await axios.patch(
-        `https://ljbridal.co.uk/apiapi/users/profile`,
+        `/apiapi/users/profile`,
         {
           data: data,
         },
@@ -102,7 +93,7 @@ export const userChangeEmail = (data) => {
   return async (dispatch) => {
     try {
       await axios.patch(
-        `https://ljbridal.co.uk/apiapi/users/email`,
+        `/apiapi/users/email`,
         {
           email: data.email,
           newemail: data.newemail,

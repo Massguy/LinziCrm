@@ -16,7 +16,7 @@ const AdminPipeline = (props) => {
   const pipeline = useSelector((state) => state.pipeline);
   const notifications = useSelector((state) => state.notifications);
   const dispatch = useDispatch();
-  
+
   const [searchValues, setSearchValues] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     defaultValues
@@ -48,7 +48,6 @@ const AdminPipeline = (props) => {
   };
 
   const handleModal = (id) => {
-  
     setToRemove(id);
     setRemoveModal(true);
   };
