@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-
 const AddNotes = ({ customerNotes, customerName, addNotes }) => {
   const [notes, setNotes] = useState("");
-  // const [startDate, setStartDate] = useState(new Date());
+  const [date, setDate] = useState(null);
 
   return (
     <>
       <h3>{customerName} customer Notes</h3>
       CustomerNotes: <p>{customerNotes}</p>
       <form onSubmit={(e) => addNotes(e, notes)}>
+        <DatePicker date={date} onChange={(date) => setDate(date)} />
         <textarea
           name="textValue"
           value={notes}

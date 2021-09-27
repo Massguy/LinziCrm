@@ -3,7 +3,6 @@ import { Table, Pagination, Modal, Button } from "react-bootstrap";
 
 import { LinkContainer } from "react-router-bootstrap";
 
-import Moment from "react-moment";
 import Loading from "../../../utils/loader";
 
 const PipelineTable = ({
@@ -28,39 +27,37 @@ const PipelineTable = ({
     <>
       {pipe && pipe.docs ? (
         <>
-        <div className="pipelineTable">
-          <Table className='table' striped bordered hover>
-            <thead>
-              <tr>
-                <th>Created</th>
-                <th>CustomerName</th>
-                <th>customerContactInward</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pipe.docs.map((item) => (
-                <tr key={item._id}>
-                  <td>
-                    <Moment to={item.date}></Moment>
-                  </td>
-                  <td>{item.customerName}</td>
-                  <td>{item.customerContactInward}</td>
-                  <td
-                    className="action_btn remove_btn"
-                    onClick={() => handleModal(item._id)}
-                  >
-                    Remove
-                  </td>
-                  <td
-                    className="action_btn edit_btn"
-                    onClick={() => gotoEdit(item._id)}
-                  >
-                    Edit
-                  </td>
+          <div className="pipelineTable">
+            <Table className="table" striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Created</th>
+                  <th>CustomerName</th>
+                  <th>customerContactInward</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {pipe.docs.map((item) => (
+                  <tr key={item._id}>
+                    <td>{item.date.slice(0, 10)}</td>
+                    <td>{item.customerName}</td>
+                    <td>{item.customerContactInward}</td>
+                    <td
+                      className="action_btn remove_btn"
+                      onClick={() => handleModal(item._id)}
+                    >
+                      Remove
+                    </td>
+                    <td
+                      className="action_btn edit_btn"
+                      onClick={() => gotoEdit(item._id)}
+                    >
+                      Edit
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           </div>
           <Pagination>
             {pipe.hasPrevPage ? (

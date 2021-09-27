@@ -10,9 +10,11 @@ const noteController = {
     }
   },
   async getNotes(req, res, next) {
-    const { customerId } = req.params;
+    const { id: customerId } = req.params;
+
     try {
       const notes = await noteService.getNotesByCustomerId(customerId);
+      
       res.json(notes);
     } catch (error) {
       next(error);
@@ -27,13 +29,12 @@ const noteController = {
     }
   },
 
-  
   async updateNotesById(req, res, next) {
     const { id } = req.params;
-    const body = req.body
+    console.log({ id });
+    const body = req.body;
+    console.log({ body });
     try {
-    
-
       const note = await noteService.updateNotesById(id, body);
       res.json(note);
     } catch (error) {

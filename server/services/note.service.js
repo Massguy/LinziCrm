@@ -29,18 +29,14 @@ const getAllNotes = async (req) => {
 };
 
 const updateNotesById = async (id, body) => {
-
   try {
-    const note = await Note.findByIdAndUpdate(
-    id, body,  { new: true }
-    );
+    const note = await Note.findByIdAndUpdate(id, body, { new: true });
     if (!note) throw new ApiError(httpStatus.NOT_FOUND, "Note not found");
     return note;
   } catch (error) {
     throw error;
   }
 };
-
 
 // const  async (req, res) => {
 //   try {
@@ -57,7 +53,6 @@ const updateNotesById = async (id, body) => {
 //     res.status(500).json({ error: err });
 //   }
 // });
-
 
 /*const getPipelineById = async (_id) => {
   try {

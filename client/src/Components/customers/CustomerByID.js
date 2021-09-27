@@ -1,36 +1,33 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../hoc/dashboardLayout";
-
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-
 import hmacSHA256 from "crypto-js/hmac-sha256";
 import Base64 from "crypto-js/enc-base64";
+import DateTimePicker from "react-datetime-picker";
 
 const CustomerById = (props) => {
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState([]);
-  const [notes, setNotes] = useState([]);
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
-  const [formData, setFormData] = useState({
+  const [firstDate, setFirstDate] = useState(new Date());
+  const [secondDate, setSecondDate] = useState(new Date());
+  const [note, setNote] = useState({
     title: "",
     content: "",
-    noteId: "",
   });
+  const [successMsg, setSuccessMsg] = useState("");
   const [editNote, setEditNote] = useState(false);
 
   const auth_id = "f6500cfe-5991-422f-aa8d-fd18a814e47b";
   const auth_key =
     "VlVnsmU3Lq2yDcnSMGAtn6bhrJ4sowsG9BOn5yIFo5R0Lsy7jmGLw5YKcuTvWGwrFtHIBdHCUoc1ClWGsQ==";
 
-  // const { id } = useParams()
   const id = props.match.params.id;
 
   const getAuthHeader2 = () => {
     const hmacSignature = Base64.stringify(hmacSHA256(``, auth_key));
     return {
       headers: {
-        //'Authorization':`Bearer ${getTokenCookie()}`,
         "content-Type": "application/json",
         Accept: "application/json",
         "api-auth-id": auth_id,
@@ -40,8 +37,35 @@ const CustomerById = (props) => {
     };
   };
 
+  const handleFirstDateChange = (date) => {
+    setNote((prevState) => {
+      return {
+        ...prevState,
+        content: date + " | " + prevState.content,
+      };
+    });
+    setFirstDate(date);
+  };
+
+  const handleSecondDateChange = (date) => {
+    console.log({ date });
+    setNote((prevState) => {
+      return {
+        ...prevState,
+        content: prevState.content + "\n" + date + " | ",
+      };
+    });
+    setSecondDate(date);
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setNote((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
   };
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -59,133 +83,118 @@ const CustomerById = (props) => {
   useEffect(() => {
     const fetchCustomerNotes = async () => {
       const result = await axios.get(`http://localhost:3002/api/notes/${id}`);
-      setNotes(result.data);
+      setNote(result.data[0]);
+      console.log(id, result.data[0]);
     };
     fetchCustomerNotes();
   }, [id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { title, content, noteId } = formData;
-    try {
-      if (!editNote) {
-        const note = await axios.post(
-          "http://localhost:3002/api/notes",
-          {
-            title,
-            content,
-            customerId: id,
-          },
-          getAuthHeader2()
-        );
-        setNotes([note.data, ...notes]);
-        setFormData({ ...formData, title, content });
-      } else {
-        
-
-        const note = await axios.patch(
-          `http://localhost:3002/api/notes/${noteId}`,
-          {
-            title,
-            content,
-          },
-          getAuthHeader2()
-        );
-
-        if (note) {
-          const { title, content, _id } = note.data;
-          const updatedRes = {
-            title,
-            content,
-          };
-
-         
-          // setNotes([note.data, ...notes]);
-          const updated = notes.map((i) => (i._id === _id ? updatedRes : i));
-          setNotes(updated);
-          setFormData({ ...formData, title: "", content: "" });
+    const { title = "", content = "", _id = 0 } = note || {};
+    console.log(firstDate);
+    if (title && content) {
+      try {
+        // if (!editNote) {
+        if (!note._id) {
+          const response = await axios.post(
+            "http://localhost:3002/api/notes",
+            {
+              title,
+              content,
+              customerId: id,
+            },
+            getAuthHeader2()
+          );
+          setNote(response.data);
+        } else {
+          const result = await axios.patch(
+            `http://localhost:3002/api/notes/${_id}`,
+            {
+              title,
+              content,
+            },
+            getAuthHeader2()
+          );
+          console.log({ note: result.data });
+          setNote(result.data);
         }
+        setSuccessMsg("Note added successfully.");
+        setTimeout(() => {
+          setSuccessMsg("");
+        }, 2000);
+      } catch (err) {
+        console.log("an error occurred==>>", err);
       }
-    } catch (err) {
-      console.log("an error occurred==>>", err);
     }
-  };
-
-  const handleEdit = ({ title, content, _id }) => {
-  
-    // setNoteId(_id)
-    setEditNote(true);
-    // setTitle(title);
-    // setContent(content);
-
-    setFormData({
-      title,
-      content,
-      noteId: _id,
-    });
   };
 
   return (
     <>
       <DashboardLayout>
-        <div >
         <div>
-        <h3>{customers.CustomerName}</h3>
-        <p>Code : {customers.CustomerCode}</p>
-        <p>
-          Contact Name:{" "}
-          {customers.ContactFirstName + " " + customers.ContactLastName}
-        </p>
-        <p>OfficePhone: {customers.PhoneNumber}</p>
-        <p>
-          Mobile:{" "}
-          {customers.MobileNumber === null ? "nil" : customers.MobileNumber}
-        </p>
-        <p>Email: {customers.Email}</p>
-        <p>Website: {customers.Website}</p>
-        </div>
-        <div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <div>
-              <div>
-                <h3>{customers.Addresses[0].AddressType} Address</h3>
-                <p> {customers.Addresses[0].AddressName}</p>
-                <p> {customers.Addresses[0].StreetAddress}</p>
-                <p> {customers.Addresses[0].StreetAddress2}</p>
-                <p> {customers.Addresses[0].City}</p>
-                <p> {customers.Addresses[0].Country}</p>
-                <p> {customers.Addresses[0].PostalCode}</p>
-              </div>
-            </div>
-          )}
-        </div>
-        </div>
-
-        {notes.map((note, i) => (
-          <div key={i}>
-            <div className="notesContainer">
-              <h3>{note.title}</h3>
-              <p>{note.content}</p>
-              <p>Last Edited on {note.updatedAt.slice(0,10)}</p>
-          
-            <button onClick={() => handleEdit(note)}>Edit</button>
-            </div>
+          <div>
+            <h3>{customers.CustomerName}</h3>
+            <p>Code : {customers.CustomerCode}</p>
+            <p>
+              Contact Name:{" "}
+              {customers.ContactFirstName + " " + customers.ContactLastName}
+            </p>
+            <p>OfficePhone: {customers.PhoneNumber}</p>
+            <p>
+              Mobile:{" "}
+              {customers.MobileNumber === null ? "nil" : customers.MobileNumber}
+            </p>
+            <p>Email: {customers.Email}</p>
+            <p>Website: {customers.Website}</p>
           </div>
-        ))}
+          <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div>
+                <div>
+                  <h3>{customers.Addresses[0].AddressType} Address</h3>
+                  <p> {customers.Addresses[0].AddressName}</p>
+                  <p> {customers.Addresses[0].StreetAddress}</p>
+                  <p> {customers.Addresses[0].StreetAddress2}</p>
+                  <p> {customers.Addresses[0].City}</p>
+                  <p> {customers.Addresses[0].Country}</p>
+                  <p> {customers.Addresses[0].PostalCode}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
         <form onSubmit={(e) => handleSubmit(e)} className="customerNotesForm">
+          Select Start Date: <br />
+          <DateTimePicker
+            onChange={handleFirstDateChange}
+            value={firstDate}
+          />{" "}
+          <br />
+          Select End Date: <br />
+          <DateTimePicker
+            onChange={handleSecondDateChange}
+            value={secondDate}
+          />{" "}
+          <br />
           Title:{" "}
-          <input value={formData.title} onChange={handleChange} name="title" />{" "}
+          <input
+            value={note?.title || ""}
+            onChange={handleChange}
+            name="title"
+          />{" "}
           <br />
           Content:{" "}
           <textarea
-            value={formData.content}
+            value={note?.content || ""}
             onChange={handleChange}
             name="content"
             style={{ height: "500px" }}
           />
+          {successMsg !== "" && <p style={{ color: "green" }}>{successMsg}</p>}
           {editNote ? <button>Edit Note</button> : <button>Add Note</button>}
         </form>
       </DashboardLayout>
