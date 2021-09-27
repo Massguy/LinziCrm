@@ -82,7 +82,7 @@ const CustomerById = (props) => {
 
   useEffect(() => {
     const fetchCustomerNotes = async () => {
-      const result = await axios.get(`http://localhost:3002/api/notes/${id}`);
+      const result = await axios.get(`/apiapi/notes/${id}`);
       setNote(result.data[0]);
       console.log(id, result.data[0]);
     };
@@ -98,7 +98,7 @@ const CustomerById = (props) => {
         // if (!editNote) {
         if (!note._id) {
           const response = await axios.post(
-            "http://localhost:3002/api/notes",
+            "/apiapi/notes",
             {
               title,
               content,
@@ -109,7 +109,7 @@ const CustomerById = (props) => {
           setNote(response.data);
         } else {
           const result = await axios.patch(
-            `http://localhost:3002/api/notes/${_id}`,
+            `/apiapi/notes/${_id}`,
             {
               title,
               content,
