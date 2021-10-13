@@ -84,7 +84,6 @@ const CustomerById = (props) => {
     const fetchCustomerNotes = async () => {
       const result = await axios.get(`/apiapi/notes/${id}`);
       setNote(result.data[0]);
-      console.log(id, result.data[0]);
     };
     fetchCustomerNotes();
   }, [id]);
